@@ -21,4 +21,6 @@ client.query("select id, name, city from test" , function selectTable(err, rows,
     }
 });
 
+
+
 client.end();
