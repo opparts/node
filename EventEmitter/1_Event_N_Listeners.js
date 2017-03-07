@@ -17,14 +17,20 @@ var eventEmitter = new events.EventEmitter();
 
 
 // 3) 注册ABC时间到一个匿名函数中
-eventEmitter.on('abc', function () {
-    console.log("event_1 被触发了！");
+eventEmitter.on('event_1', function () {
+    console.log("event_1 被触发了！ - 第1个事件监听对象");
+});
+eventEmitter.on('event_1', function () {
+    console.log("event_1 被触发了！ - 第2个事件监听对象");
+});
+eventEmitter.on('event_1', function () {
+    console.log("event_1 被触发了！ - 第3个事件监听对象");
 });
 
 
 // 4）触发abc事件。
 console.log("Start 触发-----");
-eventEmitter.emit('abc');
+eventEmitter.emit('event_1');
 console.log("End   触发-----");
 
 
