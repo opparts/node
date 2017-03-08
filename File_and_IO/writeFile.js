@@ -10,7 +10,7 @@ console.log("准备写入文件");
 // writeFile是创建一个新文件，如果该文件已经存在，会直接覆盖旧的文件的内容
 //
 
-file.appendFile('test.csv', '德国, DE',  function(err) {
+file.appendFile('test.csv', '德国, DE \r\n',  function(err) {
     if (err) {
         return console.error(err);
     }
