@@ -1,9 +1,9 @@
 var mysql   = require('mysql');
 var client = mysql.createConnection({
-    host   : 'www.hanapost.com',
-    user   : 'node',
-    password : 'Sap12345',
-    database : 'node'
+    host   : 'www.xxx.com',
+    user   : 'xxx',
+    password : 'xxx',
+    database : 'xxxxx'
 });
 
 client.connect();
