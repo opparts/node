@@ -1,17 +1,20 @@
 /**
- * Created by apple on 2017/7/31.
+ * Created by Alex Liu on 2017/7/31.
  */
-//	Getting some 'http' power
 var http=require('http');
 var kafka = require('kafka-node');
+var redis = require('redis');
 
 //	Setting where we are expecting the request to arrive.
-//	http://localhost:8125/upload
+//	http://localhost:8125
 var request = {
     hostname: 'localhost',
     port: 8125,
     method: 'GET'
 };
+
+//创建一个redis的链接client
+var redis_client = redis.createClient();
 
 //	Lets create a server to wait for request.;
 http.createServer(function(request, response)
@@ -23,36 +26,48 @@ http.createServer(function(request, response)
     request.on('data', function (chunk)
     {
 
-        //console.log(chunk.toString('utf8'));
+        //第1层回调地狱
         //define a message object for incoming message from SMS Gateway
         var tbox_message_obj = JSON.parse(chunk);
 
         if(typeof(tbox_message_obj.device_id) == 'undefined'){
-            //Invalid message
+            //无效的消息 message
             response.end('Missing message');
             console.log('没有定义');
 
 
         }else{
-            //Valided message
-            console.log(tbox_message_obj.device_id);
 
-            var Producer = kafka.Producer,
-                client = new kafka.Client('localhost:2181'),
-                producer = new Producer(client);
-            payloads = [
-                { topic: 'test3', messages: chunk.toString('utf8'), partition: 0 },
-            ];
-            producer.on('ready', function(){
-                producer.send(payloads, function(err, data){
-                    console.log(JSON.stringify(data) + ': Return from Kafka');
-                });
-            });
-            producer.on('error', function(err){
-                console.log('Sending Message failed!');
+            //校验消息的来源是否正确
+            console.log(tbox_message_obj.device_id);
+            redis_client.hgetall(tbox_message_obj.device_id, function(err, returned_object) {
+
+                //第2层回调地狱
+                if(JSON.stringify(returned_object).length > 0 ){
+                    //有效的消息
+                    var Producer = kafka.Producer,
+                        client = new kafka.Client('localhost:2181'),
+                        producer = new Producer(client);
+                    payloads = [
+                        { topic: 'test3', messages: chunk.toString('utf8'), partition: 0 },
+                    ];
+
+                    producer.on('ready', function(){
+                        //第3层回调地狱
+                        producer.send(payloads, function(err, data){
+                            console.log(JSON.stringify(data) + ': Return from Kafka');
+                        });
+                    });
+                    producer.on('error', function(err){
+                        //第3层回调地狱
+                        console.log('Sending Message failed!');
+                    })
+                }else{
+                    console.log('非我厂的车架号');
+
+                }
             })
         }
-
     });
     response.write('<h1>Server is running 8125....</h1>');
     response.end();
