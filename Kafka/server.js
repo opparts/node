@@ -32,9 +32,7 @@ http.createServer(function(request, response)
 
         if(typeof(tbox_message_obj.device_id) == 'undefined'){
             //无效的消息 message
-            response.end('Missing message');
-            console.log('没有定义');
-
+            response.end('Missing message, do nothing');
 
         }else{
 
@@ -64,7 +62,6 @@ http.createServer(function(request, response)
                     })
                 }else{
                     console.log('非我厂的车架号');
-
                 }
             })
         }
