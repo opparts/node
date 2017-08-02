@@ -9,7 +9,7 @@ var kafka = require('kafka-node');
 //	http://localhost:8125/upload
 var request = {
     hostname: 'localhost',
-    port: 8125,
+    port: 8126,
     method: 'GET'
 };
 
@@ -39,6 +39,7 @@ http.createServer(function(request, response)
         producer.on('error', function(err){})
 
     });
-    response.write('<h1>Server is running 8125....</h1>');
+    response.write('<h1>Server is running 8126....</h1>');
     response.end();
-}).listen(8125);
+}).listen(8126);
+console.log('We are listen 8126 port');
