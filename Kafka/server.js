@@ -14,6 +14,7 @@ var request = {
 };
 
 //创建一个redis的链接client
+//创建一个redis的链接client
 var redis_client = redis.createClient();
 
 //	Lets create a server to wait for request.;
@@ -38,10 +39,21 @@ http.createServer(function(request, response)
 
             //校验消息的来源是否正确
             console.log(tbox_message_obj.device_id);
-            redis_client.hgetall(tbox_message_obj.device_id, function(err, returned_object) {
+            redis_client.hgetall(tbox_message_obj.device_id, function(err, object) {
+
+                if(err){
+                    console.log(err);
+                    return;
+                }
+                var obj_string = JSON.stringify(object);
+                var json_obj = JSON.parse(obj_string);
+                if(json_obj == null){
+                    console.log('没有找到车牌号');
+                    return;
+                }
 
                 //第2层回调地狱
-                if(JSON.stringify(returned_object).length > 0 ){
+                if(json_obj.device_id.length > 0 ){
                     //有效的消息
                     var Producer = kafka.Producer,
                         client = new kafka.Client('localhost:2181'),
