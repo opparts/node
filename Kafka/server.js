@@ -14,7 +14,6 @@ var request = {
 };
 
 //创建一个redis的链接client
-//创建一个redis的链接client
 var redis_client = redis.createClient();
 
 //	Lets create a server to wait for request.;
