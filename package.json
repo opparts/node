@@ -1,0 +1,9 @@
+{
+  "name": "node",
+  "version": "0.0.1",
+  "dependencies": {
+    "hbase": "^0.3.0",
+    "kafka-node": "^2.2.3",
+    "redis": "^2.8.0"
+  }
+}
